@@ -1,24 +1,15 @@
-from pydantic import BaseModel,Field
+from pydantic import BaseModel, Field
 
 class VehicleBase(BaseModel):
-    plateNumber: str = Field(..., alias="plate_number")
+    plate_number: str
+
     class Config:
         populate_by_name = True
+        from_attributes = True
 
 class VehicleCreate(VehicleBase):
     pass
 
-class VehicleRead(VehicleBase):
+class VehicleResponse(VehicleBase):
     id: int
 
-    class Config:
-        orm_mode = True
-
-
-class VehicleResponse(BaseModel):
-    id: int
-    plateNumber: str = Field(..., alias="plate_number")
-
-    class Config:
-        from_attributes = True
-        populate_by_name = True

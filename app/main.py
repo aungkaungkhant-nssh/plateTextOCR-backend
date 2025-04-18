@@ -5,8 +5,8 @@ import numpy as np
 import easyocr
 from fastapi.middleware.cors import CORSMiddleware
 import face_recognition
-
-
+from app.routes import vehicle
+from app.database import engine, Base
 
 app = FastAPI()
 app.add_middleware(
@@ -18,10 +18,11 @@ app.add_middleware(
 )
 
 
+Base.metadata.create_all(bind=engine)
+app.include_router(vehicle.router)
+
+
 reader = easyocr.Reader(['en'], gpu=False)
-
-print("hello")
-
 @app.get("/")
 def read_root():
     return {"message": "Hello, FastAPI!"}

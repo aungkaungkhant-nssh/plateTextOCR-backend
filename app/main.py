@@ -1,8 +1,6 @@
 from fastapi import FastAPI, File,UploadFile
 from fastapi.responses import JSONResponse
 import cv2
-import numpy as np
-import easyocr
 from fastapi.middleware.cors import CORSMiddleware
 import face_recognition
 from app.routes import vehicle
@@ -19,41 +17,12 @@ app.add_middleware(
 
 
 Base.metadata.create_all(bind=engine)
+
 app.include_router(vehicle.router)
 
-
-reader = easyocr.Reader(['en'], gpu=False)
 @app.get("/")
 def read_root():
     return {"message": "Hello, FastAPI!"}
-
-@app.post("/check-license")
-async def check_license(file: UploadFile = File(...)):
-    contents = await file.read()
-    
-    npimg = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-
-    if img is None:
-        return JSONResponse(content={"error": "Image decoding failed"}, status_code=400)
-
-    result =   reader.readtext(img)
-
-    if not result:
-        return JSONResponse(content={"message": "No text detected"}, status_code=200)
-
-    threshold = 0.05
-    extracted_text = []
-    for bbox, text, confidence in result:
-        if confidence > threshold:
-            print(text)
-            extracted_text.append({
-                "text": text,
-            })
-        else:
-            print("Text confidence below threshold, not appended.")
-
-    return JSONResponse(content={"results": extracted_text})
 
 @app.post("/check-person")
 async def check_person(file: UploadFile=File(...)):

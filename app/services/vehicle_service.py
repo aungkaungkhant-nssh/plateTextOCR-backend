@@ -1,3 +1,4 @@
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.models.vehicle import Vehicle
 from app.schema.vehicle_schema import  VehicleResponse
@@ -7,7 +8,7 @@ from app.helpers.extract_image import extract_plate_number_from_image;
 
 
 
-async def create_vehicle(db: Session, file: UploadFile = File(...))->VehicleResponse:
+async def create_vehicle(db: Session, file: UploadFile = File(...))-> VehicleResponse:
     plate_number= await extract_plate_number_from_image(file);
 
     # Optional: check if already exists

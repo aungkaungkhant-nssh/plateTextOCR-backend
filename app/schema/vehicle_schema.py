@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 class VehicleBase(BaseModel):
     plate_number: str
@@ -12,4 +13,8 @@ class VehicleCreate(VehicleBase):
 
 class VehicleResponse(VehicleBase):
     id: int
+    punishment_count: int
+    punishment_amount: int
+    created_at: datetime
+    updated_at: datetime
 

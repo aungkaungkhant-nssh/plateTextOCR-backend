@@ -14,7 +14,7 @@ async def create_vehicle(db: Session, file: UploadFile = File(...))-> VehicleRes
     # Optional: check if already exists
     existing = db.query(Vehicle).filter_by(plate_number=plate_number).first()
     if existing:
-        return JSONResponse(content={"message": "Plate already exists"}, status_code=200)
+        return existing
 
     # Save to database
     db_vehicle = Vehicle(plate_number=plate_number)
